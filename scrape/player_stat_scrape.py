@@ -38,62 +38,63 @@ def find_year(profile):
     print(years)
     print(f'{len(gmlogs)} seasons found')
 
-def scrape_stats (year):    
+def scrape_stats (player_url):    
     counter = 0
     start = time.perf_counter()
 
     with open(out_file, 'w', encoding = 'utf-8', newline = '\n') as csvfile:
         writer = csv.writer(csvfile, delimiter='\t')
-        #find_year(player_url)
-        #for yr in gmlogs:
-            
-        year = requests.get(year)
-        year = BeautifulSoup(year.text, 'lxml')
-            
-        table = year.find('tbody')
-        rows = table.findChildren(['tr'])
-
+        find_year(player_url)
         headers = ['date', 'goals', 'assists', '+/-', 'pim',\
                    'shots', 'shot%', 'TOI', 'hits',\
                    'blocks', 'faceoff %']
-        #headers = '\t'.join(headers)
         writer.writerow(headers)
-        for row in rows:
-            cols = row.find_all('td')
-            cols = [x.text.strip() for x in cols]
-            yr = 0
-            out = []
-            for count, col in enumerate(cols):
-                if count == 0:
-                    out.append(col)
-                    yr = col[:4]
-                elif count == 7:
-                    out.append(col)
-                elif count == 8:
-                    out.append(col)
-                elif count == 10:
-                    out.append(col)
-                elif count == 11:
-                    out.append(col)
-                elif count == 19:
-                    out.append(col)
-                elif count == 20:
-                    out.append(col)
-                elif count == 22:
-                    out.append(col)
-                elif count == 23:
-                    out.append(col)
-                elif count == 24:
-                    out.append(col)
-                elif count == 27:
-                    out.append(col)
-
-            writer.writerow(out)
+        for yr, log in zip(years, gmlogs):
             
-        end = time.perf_counter()
-        runtime = end-start
-        print(f'''summary of {yr} season: 
-        {len(rows)} games scraped in {runtime} seconds''')        
+            year = requests.get(log)
+            year = BeautifulSoup(year.text, 'lxml')
+            
+            table = year.find('tbody')
+            rows = table.findChildren(['tr'])
+
+            
+            for row in rows:
+                cols = row.find_all('td')
+                cols = [x.text.strip() for x in cols]
+                yr = 0
+                out = []
+                for count, col in enumerate(cols):
+                    if count == 0:
+                        out.append(col)
+                        yr = col[:4]
+                    elif count == 7:
+                        out.append(col)
+                    elif count == 8:
+                        out.append(col)
+                    elif count == 10:
+                        out.append(col)
+                    elif count == 11:
+                        out.append(col)
+                    elif count == 19:
+                        out.append(col)
+                    elif count == 20:
+                        out.append(col)
+                    elif count == 22:
+                        out.append(col)
+                    elif count == 23:
+                        out.append(col)
+                    elif count == 24:
+                        out.append(col)
+                    elif count == 27:
+                        out.append(col)
+
+                if out:
+                    writer.writerow(out)
+            
+            end = time.perf_counter()
+            runtime = end-start
+            print(f'''summary of {yr} season: 
+            {len(rows)} games scraped in {runtime} seconds''')        
 
     
 parser = argparse.ArgumentParser(description = 'Player Handle')
@@ -114,9 +115,8 @@ out_file = f'{path}{name}_stats.csv'
 if os.path.exists(path):
     print(f'Scraping statistical history for {player}')
     #scrape_stats(out_file)
-    find_year(player_url)
-    for gm in gmlogs:
-        scrape_stats(gm)
+    scrape_stats(player_url)
+    
 else:
     print('Creating data directory')
     print(f'Scraping statistical history for {player}')
