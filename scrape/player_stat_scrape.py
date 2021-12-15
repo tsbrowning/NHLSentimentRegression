@@ -18,8 +18,9 @@ import requests
 import sys
 import time
 
-gmlogs = []
+game_logs = []
 years = []
+games_played = []
 
 def find_year(profile):
     print('searching for seasons')
@@ -29,14 +30,14 @@ def find_year(profile):
         addy = a['href']
         addy = f'https://www.hockey-reference.com{addy}'
         if search('gamelog/\d{4}', addy):
-            if addy in gmlogs:
+            if addy in game_logs:
                 continue
             else:
-                gmlogs.append(addy)
+                game_logs.append(addy)
                 years.append(addy[-4:])
 
     print(years)
-    print(f'{len(gmlogs)} seasons found')
+    print(f'{len(game_logs)} seasons found')
 
 def scrape_stats (player_url):    
     counter = 0
@@ -49,8 +50,7 @@ def scrape_stats (player_url):
                    'shots', 'shot%', 'TOI', 'hits',\
                    'blocks', 'faceoff %']
         writer.writerow(headers)
-        for yr, log in zip(years, gmlogs):
-            
+        for yr, log in zip(years, game_logs):
             year = requests.get(log)
             year = BeautifulSoup(year.text, 'lxml')
             
@@ -65,8 +65,14 @@ def scrape_stats (player_url):
                 out = []
                 for count, col in enumerate(cols):
                     if count == 0:
-                        out.append(col)
-                        yr = col[:4]
+                        if col in games_played:
+                            break
+                        else:
+                            games_played.append(col)
+                        
+                            out.append(col)
+                            yr = col[:4]
+                        
                     elif count == 7:
                         out.append(col)
                     elif count == 8:
