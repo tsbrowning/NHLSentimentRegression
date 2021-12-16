@@ -40,7 +40,6 @@ def find_year(profile):
     print(f'{len(game_logs)} seasons found')
 
 def scrape_stats (player_url):    
-    counter = 0
     start = time.perf_counter()
 
     with open(out_file, 'w', encoding = 'utf-8', newline = '\n') as csvfile:
@@ -51,6 +50,7 @@ def scrape_stats (player_url):
                    'blocks', 'faceoff %']
         writer.writerow(headers)
         for yr, log in zip(years, game_logs):
+            lap = time.perf_counter()
             year = requests.get(log)
             year = BeautifulSoup(year.text, 'lxml')
             
@@ -98,9 +98,11 @@ def scrape_stats (player_url):
                     writer.writerow(out)
             
             end = time.perf_counter()
-            runtime = end-start
+            runtime = end-lap
             print(f'''summary of {yr} season: 
-            {len(rows)} games scraped in {runtime} seconds''')        
+            {len(rows)} games scraped in {runtime} seconds''')
+            
+    print(f'{len(game_logs)} seasons scraped in {end-start} seconds')
 
     
 parser = argparse.ArgumentParser(description = 'Player Handle')
@@ -128,5 +130,5 @@ else:
     print(f'Scraping statistical history for {player}')
     os.mkdir(path)
     find_year(player_url)
-    for gm in gmlogs:
+    for gm in game_logs:
         scrape_stats(gm)
