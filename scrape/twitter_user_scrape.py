@@ -16,14 +16,14 @@ def scrape_tweets (f):
             tweet = str(tweet.json())
             json_object = json.loads(tweet)
             line = []
+            user = json_object['user']
             c = str(json_object['content'])
             d = str(json_object['date'])
-            line.append(c)
             line.append(d)
-            l = ' * '.join(line)
-            #e.write(l)
-            #e.write('\n')
-            #print('hello')
+            line.append(user.get('displayname'))
+            line.append(c)
+            l = '\t'.join(line)
+
             e.write(f'{l}\n')
     end = time.perf_counter()
     runtime = end-start
@@ -37,7 +37,7 @@ handle = str(sys.argv[2])
 
 directory = 'data/'
 
-parent_dir = './'
+parent_dir = '../'
 
 path = os.path.join(parent_dir, directory)
 
@@ -45,7 +45,8 @@ path = os.path.join(parent_dir, directory)
 
 #query = 'from:' + handle + ' since:2005-01-01'
 query = f'from:{handle} since:2005-01-01'
-out_file = path + handle + '.txt'
+out_file = f'{path}{handle}.txt'
+#out_file = path + handle + '.txt'
 
 scraper = snscrape.modules.twitter.TwitterSearchScraper(query)
 
