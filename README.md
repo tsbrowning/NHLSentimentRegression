@@ -6,6 +6,6 @@ https://www.hockey-reference.com
 
 
 The scrapers are currently functional. I suspect this is superfluous, however both scrapers take an extra descriptive argument. For example:
-\n\n
+
 Using Alex Ovechkin as our example we can scrape his tweets using the following command: python twitter_user_scrape.y --handle ovi8
-\nHis stats can be scraped using the following: python player_stat_scrape.py --player o/ovechal01
+Again using Ovechkin, his stats can be scraped using the following: python player_stat_scrape.py --player o/ovechal01
