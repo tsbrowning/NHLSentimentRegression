@@ -4,6 +4,8 @@ import argparse
 import csv
 import json
 import os
+import pandas as pd
+import pytz
 import snscrape.modules.twitter
 import sys
 import time
@@ -13,7 +15,7 @@ def scrape_tweets (f):
     start = time.perf_counter()    
     with open(f, 'w', encoding = 'utf-8', newline = '\n') as csvfile:
         writer = csv.writer(csvfile, delimiter='\t')
-        headers = ['date', 'time', 'display name', 'content']
+        headers = ['date time', 'display name', 'content']
         writer.writerow(headers)
         for tweet in scraper.get_items():
             counter += 1
@@ -23,10 +25,11 @@ def scrape_tweets (f):
             user = json_object['user']
             content = str(json_object['content'])
             date = str(json_object['date'])
-            full_date = date.split('T')
+            #full_date = date.split('T')
+            dt = pd.to_datetime(date)
+            dte = dt.replace(tzinfo=eastern)
             
-            for d in full_date:
-                line.append(d)
+            line.append(dte)
             line.append(user.get('displayname'))
             line.append(content)
             
@@ -36,6 +39,7 @@ def scrape_tweets (f):
     runtime = end-start
     print(f'{counter} tweets scraped in {runtime} seconds')
 
+eastern = pytz.timezone('US/Eastern')
 parser = argparse.ArgumentParser(description = 'Player Handle')
 parser.add_argument('--handle', dest='handle', type=str, help="Player's Twitter handle")
 arg = parser.parse_args()
