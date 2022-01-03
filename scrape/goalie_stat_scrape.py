@@ -28,6 +28,7 @@ def find_year(profile):
     soup = BeautifulSoup(player.text, 'lxml')
     ##Games from the 12-13 season onwards are listed with gametime on hockey-reference
     ##This can be used to better label tweets as pregame and postgame in the SQL section
+    ##Perhaps this will be more effectively addressed in the sql section >:/
     for a in soup.find_all('a', href=True):
         addy = a['href']
         addy = f'https://www.hockey-reference.com{addy}'
@@ -35,8 +36,10 @@ def find_year(profile):
             if addy in game_logs:
                 continue
             else:
+                
                 game_logs.append(addy)
                 years.append(addy[-4:])
+                
 
     print(years)
     print(f'{len(game_logs)} seasons found')
@@ -47,7 +50,7 @@ def scrape_stats (player_url):
     with open(out_file, 'w', encoding = 'utf-8', newline = '\n') as csvfile:
         writer = csv.writer(csvfile, delimiter='\t')
         find_year(player_url)
-        headers = ['date', 'decision', 'goals against', 'shots against', 'saves',\
+        headers = ['puckdrop', 'decision', 'goals against', 'shots against', 'saves',\
                    'save %']
         writer.writerow(headers)
         for yr, log in zip(years, game_logs):
@@ -70,7 +73,15 @@ def scrape_stats (player_url):
                             break
                         else:
                             games_played.append(col)
-                        
+                            puckdrops = row.find_all(href=True)
+                            for date in puckdrops:
+                                box_score = date['href']
+                                
+                                if box_score.startswith('/box'):
+                                    ##Scrape puckdrop time from here using requests and bs4
+                                    ##Attach to date in a datetime format
+                                    print('woo!')
+
                             out.append(col)
                             yr = col[:4]
                         
