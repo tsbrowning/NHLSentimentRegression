@@ -13,7 +13,7 @@ import argparse
 import csv
 from bs4 import BeautifulSoup
 import os
-from re import search
+import re
 import requests
 import sys
 import time
@@ -32,7 +32,7 @@ def find_year(profile):
     for a in soup.find_all('a', href=True):
         addy = a['href']
         addy = f'https://www.hockey-reference.com{addy}'
-        if search('gamelog/\d{4}', addy):
+        if re.search('gamelog/\d{4}', addy):
             if addy in game_logs:
                 continue
             else:
@@ -78,10 +78,22 @@ def scrape_stats (player_url):
                                 box_score = date['href']
                                 
                                 if box_score.startswith('/box'):
+
                                     ##Scrape puckdrop time from here using requests and bs4
                                     ##Attach to date in a datetime format
-                                    print('woo!')
+                                    bs = f'https://www.hockey-reference.com{box_score}'
+                                    bs = requests.get(bs)
+                                    bs = BeautifulSoup(bs.text, 'lxml')
+                                    box_score = bs.find('div', {'class' : 'scorebox_meta'})
+                                    #Working time filter regex: <(?<=\d{4}, ).*(?= PM\<\/div)>
+                                    d1 = box_score.find('div')
+                                    d1 = str(d1)
+                                    puckdrop = re.search('(?<=\d{4}, ).*(?= PM\<\/div)', d1).group()
+                                    #regx to locate hour in 08:00 format <.*(?=:)>
+                                    hour = int(puckdrop)
+                                    
 
+                            col = f'{col} {puckdrop}-5:00'
                             out.append(col)
                             yr = col[:4]
                         
