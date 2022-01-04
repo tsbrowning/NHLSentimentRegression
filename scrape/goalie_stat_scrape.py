@@ -12,7 +12,9 @@ Created on Sun Dec 12 04:30:00 2021
 import argparse
 import csv
 from bs4 import BeautifulSoup
+from dateutil.parser import parse
 import os
+import pytz
 import re
 import requests
 import sys
@@ -90,11 +92,18 @@ def scrape_stats (player_url):
                                     d1 = str(d1)
                                     puckdrop = re.search('(?<=\d{4}, ).*(?= PM\<\/div)', d1).group()
                                     #regx to locate hour in 08:00 format <.*(?=:)>
-                                    hour = int(puckdrop)
                                     
-
+                                    
+                                    
+                            #This works for EST games, which is most NHL Arenas, but not all of them.
+                            #Next up is a function that assigns a timezone, 
+                            #based off of the location in the boxscore scraped above.
                             col = f'{col} {puckdrop}-5:00'
-                            out.append(col)
+                            
+                            dt = parse(col)
+                            localtime = dt.astimezone(pytz.timezone('US/Eastern'))
+                            #print(localtime)
+                            out.append(localtime)
                             yr = col[:4]
                         
                     elif count == 7:
