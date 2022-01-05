@@ -14,6 +14,7 @@ import csv
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
 import os
+import pandas as pd
 import pytz
 import re
 import requests
@@ -24,8 +25,7 @@ game_logs = []
 years = []
 games_played = []
 
-<<<<<<< Updated upstream
-=======
+
 def in_dst(date):
     #Example datetime range to be expanded for all years from 2015
     #Currently using DST dates in 2017
@@ -36,7 +36,7 @@ def in_dst(date):
     else:
         print(f'OUTSIDE OF DST: {date}')
 
->>>>>>> Stashed changes
+
 def find_year(profile):
     print('searching for seasons')
     player = requests.get(profile)
@@ -100,7 +100,6 @@ def scrape_stats (player_url):
                                     bs = requests.get(bs)
                                     bs = BeautifulSoup(bs.text, 'lxml')
                                     box_score = bs.find('div', {'class' : 'scorebox_meta'})
-                                    #Working time filter regex: <(?<=\d{4}, ).*(?= PM\<\/div)>
                                     d1 = box_score.find('div')
                                     d1 = str(d1)
                                     puckdrop = re.search('(?<=\d{4}, ).*(?= PM\<\/div)', d1).group()
@@ -111,11 +110,14 @@ def scrape_stats (player_url):
                             #This works for EST games, which is most NHL Arenas, but not all of them.
                             #Next up is a function that assigns a timezone, 
                             #based off of the location in the boxscore scraped above.
-                            col = f'{col} {puckdrop}-5:00'
+                            test = f'{col} {puckdrop}'
+                            d = parse(test)
+                            in_dst(d)
                             
+                            col = f'{col} {puckdrop}-5:00'
                             dt = parse(col)
+                            
                             localtime = dt.astimezone(pytz.timezone('US/Eastern'))
-                            #print(localtime)
                             out.append(localtime)
                             yr = col[:4]
                         
