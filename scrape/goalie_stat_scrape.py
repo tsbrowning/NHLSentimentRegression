@@ -24,6 +24,19 @@ game_logs = []
 years = []
 games_played = []
 
+<<<<<<< Updated upstream
+=======
+def in_dst(date):
+    #Example datetime range to be expanded for all years from 2015
+    #Currently using DST dates in 2017
+    #Example player (Garrett Sparks) didn't play in 2017, subbing in 2016
+    DST = pd.date_range(start ='2016-03-12 02:00:00', end='2016-11-05 02:00:00', freq='30min' ).to_list()
+    if date in DST:
+        print(f'GAME IN DST: {date}')
+    else:
+        print(f'OUTSIDE OF DST: {date}')
+
+>>>>>>> Stashed changes
 def find_year(profile):
     print('searching for seasons')
     player = requests.get(profile)
