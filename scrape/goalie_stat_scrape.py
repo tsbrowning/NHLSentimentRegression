@@ -26,20 +26,20 @@ years = []
 games_played = []
 
 
-def in_dst(date):
+def in_dst(target):
     #Example datetime range to be expanded for all years from 2015
     #Currently using DST dates in 2017
     #Example player (Garrett Sparks) didn't play in 2017, subbing in 2016
     DST = pd.date_range(start ='2016-03-12 02:00:00', end='2016-11-05 02:00:00', freq='30min' ).to_list()
-    if date in DST:
-        date = f'{date}-4:00:00'
-        print(f'GAME IN DST: {date}')
-        return date
+    if target in DST:
+        value = f'{target}-4:00:00'
+        #print(f'GAME IN DST: {date}')
+        return value
         
     else:
-        date = f'{date}-5:00:00'
-        print(f'OUTSIDE OF DST: {date}')
-        return date
+        value = f'{target}-5:00:00'
+        #print(f'OUTSIDE OF DST: {date}')
+        return value
 
 
 def find_year(profile):
@@ -117,7 +117,9 @@ def scrape_stats (player_url):
                             #based off of the location in the boxscore scraped above.
                             test = f'{col} {puckdrop}'
                             d = parse(test)
-                            in_dst(d)
+                            #e = '2016-01-01 00:00:00'
+                            print(in_dst(d))
+                            #print(d)
                             
                             col = f'{col} {puckdrop}-5:00'
                             dt = parse(col)
