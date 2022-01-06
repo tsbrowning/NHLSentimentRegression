@@ -32,9 +32,14 @@ def in_dst(date):
     #Example player (Garrett Sparks) didn't play in 2017, subbing in 2016
     DST = pd.date_range(start ='2016-03-12 02:00:00', end='2016-11-05 02:00:00', freq='30min' ).to_list()
     if date in DST:
+        date = f'{date}-4:00:00'
         print(f'GAME IN DST: {date}')
+        return date
+        
     else:
+        date = f'{date}-5:00:00'
         print(f'OUTSIDE OF DST: {date}')
+        return date
 
 
 def find_year(profile):
