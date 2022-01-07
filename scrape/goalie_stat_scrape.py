@@ -10,8 +10,9 @@ Created on Sun Dec 12 04:30:00 2021
 
 
 import argparse
-import csv
 from bs4 import BeautifulSoup
+import csv
+import datetime
 from dateutil.parser import parse
 import os
 import pandas as pd
@@ -51,12 +52,12 @@ for year in dst_years:
         
 def in_dst(target):    
     if target in DST:
-        value = f'{target}-4:00:00'
+        value = f'{target}-0400'
         #print(f'GAME IN DST: {date}')
         return value
         
     else:
-        value = f'{target}-5:00:00'
+        value = f'{target}-0500'
         #print(f'OUTSIDE OF DST: {date}')
         return value
 
@@ -136,14 +137,13 @@ def scrape_stats (player_url):
                             #based off of the location in the boxscore scraped above.
                             test = f'{col} {puckdrop}'
                             d = parse(test)
-                            #e = '2016-01-01 00:00:00'
                             d = in_dst(d)
-                            print(d)
-                            
-                            col = f'{col} {puckdrop}-5:00'
-                            dt = parse(col)
+                            dt = parse(d)
                             
                             localtime = dt.astimezone(pytz.timezone('US/Eastern'))
+                            #Adding 12 hours, because games are listed with 
+                            #12 hour times and they aren't played during AM hours
+                            localtime = localtime + datetime.timedelta(hours = 12)
                             out.append(localtime)
                             yr = col[:4]
                         
