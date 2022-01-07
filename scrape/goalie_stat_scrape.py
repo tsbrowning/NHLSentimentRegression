@@ -24,13 +24,32 @@ import time
 game_logs = []
 years = []
 games_played = []
+DST = []
 
 
-def in_dst(target):
-    #Example datetime range to be expanded for all years from 2015
-    #Currently using DST dates in 2017
-    #Example player (Garrett Sparks) didn't play in 2017, subbing in 2016
-    DST = pd.date_range(start ='2016-03-12 02:00:00', end='2016-11-05 02:00:00', freq='30min' ).to_list()
+
+#This is messy, terrible, an I imagine I can replace this with less than 5 lines of pandas
+#See: https://stackoverflow.com/questions/53292178/looking-for-pandas-datetimeindex-is-dst
+#BUT IT WORKS FOR NOW
+
+DST12 = pd.date_range(start ='2012-03-11 02:00:00', end='2012-11-04 02:00:00', freq='30min' ).to_list()
+DST13 = pd.date_range(start ='2013-03-10 02:00:00', end='2013-11-03 02:00:00', freq='30min' ).to_list()
+DST14 = pd.date_range(start ='2014-03-09 02:00:00', end='2014-11-02 02:00:00', freq='30min' ).to_list()
+DST15 = pd.date_range(start ='2015-03-08 02:00:00', end='2015-11-01 02:00:00', freq='30min' ).to_list()
+DST16 = pd.date_range(start ='2016-03-13 02:00:00', end='2016-11-06 02:00:00', freq='30min' ).to_list()
+DST17 = pd.date_range(start ='2017-03-12 02:00:00', end='2017-11-05 02:00:00', freq='30min' ).to_list()
+DST18 = pd.date_range(start ='2018-03-11 02:00:00', end='2018-11-04 02:00:00', freq='30min' ).to_list()
+DST19 = pd.date_range(start ='2019-03-10 02:00:00', end='2019-11-03 02:00:00', freq='30min' ).to_list()
+DST20 = pd.date_range(start ='2020-03-08 02:00:00', end='2020-11-01 02:00:00', freq='30min' ).to_list()
+DST21 = pd.date_range(start ='2021-03-14 02:00:00', end='2021-11-07 02:00:00', freq='30min' ).to_list()
+DST22 = pd.date_range(start ='2022-03-13 02:00:00', end='2022-11-06 02:00:00', freq='30min' ).to_list()
+    
+dst_years = [DST12, DST13, DST14, DST15, DST16, DST17, DST18, DST19, DST20, DST21, DST22]
+for year in dst_years:
+    for hr in year:
+        DST.append(hr)
+        
+def in_dst(target):    
     if target in DST:
         value = f'{target}-4:00:00'
         #print(f'GAME IN DST: {date}')
@@ -118,8 +137,8 @@ def scrape_stats (player_url):
                             test = f'{col} {puckdrop}'
                             d = parse(test)
                             #e = '2016-01-01 00:00:00'
-                            print(in_dst(d))
-                            #print(d)
+                            d = in_dst(d)
+                            print(d)
                             
                             col = f'{col} {puckdrop}-5:00'
                             dt = parse(col)
