@@ -117,46 +117,6 @@ def scrape_stats (player_url):
                         if col in games_played:
                             break
                         else:
-                            '''
-                            games_played.append(col)
-                            puckdrops = row.find_all(href=True)
-                            for date in puckdrops:
-                                box_score = date['href']
-                                
-                                if box_score.startswith('/box'):
-
-                                    ##Scrape puckdrop time from here using requests and bs4
-                                    ##Attach to date in a datetime format
-                                    bs = f'https://www.hockey-reference.com{box_score}'
-                                    bs = requests.get(bs)
-                                    bs = BeautifulSoup(bs.text, 'lxml')
-                                    box_score = bs.find('div', {'class' : 'scorebox_meta'})
-                                    d1 = box_score.find('div')
-                                    d1 = str(d1)
-                                    
-                                    puckdrop = re.search('(?<=\d{4}, ).*(?= PM\<\/div)', d1).group()
-                                    #regx to locate hour in 08:00 format <.*(?=:)>
-                                    
-                                        
-                                    
-                                    
-                                    
-                            #This works for EST games, which is most NHL Arenas, but not all of them.
-                            #Next up is a function that assigns a timezone, 
-                            #based off of the location in the boxscore scraped above.
-                            test = f'{col} {puckdrop}'
-                            d = parse(test)
-                            d = in_dst(d)
-                            dt = parse(d)
-                            
-                            localtime = dt.astimezone(pytz.timezone('US/Eastern'))
-                            #Adding 12 hours, because games are listed with 
-                            #12 hour times and they aren't played during AM hours
-                            localtime = localtime + datetime.timedelta(hours = 12)
-                            out.append(localtime)
-                            yr = col[:4]
-                            '''
-                            
                             try:
                                 games_played.append(col)
                                 puckdrops = row.find_all(href=True)
