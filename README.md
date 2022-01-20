@@ -11,7 +11,8 @@ Using Alex Ovechkin as our example we can scrape his tweets using the following 
 
 His stats can be scraped using the following: python player_stat_scrape.py --player o/ovechal01
 
+This is starting to come together, it looks like I'm going to have enough data
 
-Coming soon - Actual NLP preprocessing of tweets including sentiment analysis, combine tweet and stat spreadsheets into a single usable dataset for every player. Hopefully they're big enough :')
+I'm comparing dataset creation in pandas and sql
 
 First via jupyter notebook, next into scripts, if appropriate
