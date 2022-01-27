@@ -18,3 +18,5 @@ I'm comparing dataset creation in pandas and sql
 First via jupyter notebook, next into scripts, if appropriate
 
 [Blueprint of data pipeline](https://github.com/tsbrowning/NHLSentimentRegression/blob/main/data_pipeline.png?raw=true)
+
+<img src="https://github.com/tsbrowning/NHLSentimentRegression/blob/main/data_pipeline.png?raw=true" width="90%"></img>
