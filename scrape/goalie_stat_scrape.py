@@ -73,6 +73,9 @@ def find_year(profile):
     for a in soup.find_all('a', href=True):
         addy = a['href']
         #add filter here to check if twitter, in order to return handle
+        if addy.startswith('https://twitter'):
+            #regex split twitter handle from entire url
+            print(addy)
         addy = f'https://www.hockey-reference.com{addy}'
         if re.search('gamelog/\d{4}', addy):
             if addy in game_logs:
