@@ -62,15 +62,17 @@ def in_dst(target):
         return value
 
 
+#This entire function is due to be transformed from only finding years
+#Into finding player names, positions, and twitter handles
 def find_year(profile):
     print('searching for seasons')
     player = requests.get(profile)
     soup = BeautifulSoup(player.text, 'lxml')
     ##Games from the 12-13 season onwards are listed with gametime on hockey-reference
     ##This can be used to better label tweets as pregame and postgame in the SQL section
-    ##Perhaps this will be more effectively addressed in the sql section >:/
     for a in soup.find_all('a', href=True):
         addy = a['href']
+        #add filter here to check if twitter, in order to return handle
         addy = f'https://www.hockey-reference.com{addy}'
         if re.search('gamelog/\d{4}', addy):
             if addy in game_logs:
@@ -88,6 +90,9 @@ def find_year(profile):
 
     print(years)
     print(f'{len(game_logs)} seasons found')
+    
+def find_player_info(page):
+    print('hi')
 
 def scrape_stats (player_url):    
     start = time.perf_counter()
